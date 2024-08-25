@@ -1,9 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const connectDb = async () => {
-
-    const uri = 'mongodb://localhost:27017/scratch-card';
-    // const uri = 'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.9';
+  const uri: any = process.env.DATABASE_URL;
 
   try {
     const connection = await mongoose.connect(uri);
