@@ -7,8 +7,12 @@ const connectDb = async () => {
     process.exit(1);
   }
 
+  const connectionParams: mongoose.ConnectOptions = {
+    family: 4,  // Forces the use of IPv4
+  };
+
   try {
-    const connection = await mongoose.connect(uri);
+    const connection = await mongoose.connect(uri,connectionParams);
     console.log(`🟢 MongoDB connected:`, connection.connection.host);
   } catch (error) {
     console.error("MongoDB connection error:", error);
