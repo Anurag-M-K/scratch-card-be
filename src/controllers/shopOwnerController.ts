@@ -29,7 +29,7 @@ export const sendScratchCardLink = async (req: Request, res: Response) => {
 
     const token = generateJWT(offerId, reward);
 
-    const scratchCardURL = `https://scratch-card-stage.netlify.app/${token}`;
+    const scratchCardURL = `${process.env.SCRATCH_CARD_URL}/${token}`;
 
     // Send SMS using Twilio
     const response: any = client.messages
