@@ -29,7 +29,7 @@ export const sendScratchCardLink = async (req: Request, res: Response) => {
 
     const token = generateJWT(offerId, reward);
 
-    const scratchCardURL = `http://localhost:5173/${token}`;
+    const scratchCardURL = `https://scratch-card-stage.netlify.app/${token}`;
 
     // Send SMS using Twilio
     const response: any = client.messages
@@ -38,17 +38,17 @@ export const sendScratchCardLink = async (req: Request, res: Response) => {
         from: "whatsapp:+14155238886",
         to: "whatsapp:+919605257629",
       })
-      .then((message: any) => console.log(message.sid));
+      .then((message: any) => console.log(message));
 
     //it will work only if the message link sent to whatsap
     await User.create({
       phoneNumber: mobileNumber,
     });
 
-    res.status(200).json({ message: "Message send successfully " });
+    res.status(200).json({ message: "Message send successfully ",success:true });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error", error });
+    res.status(500).json({ message: "Internal server error", error,success:false });
   }
 };
 
