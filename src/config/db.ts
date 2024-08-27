@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const connectDb = async (p0?: () => void) => {
   // const uri: any = process.env.DATABASE_URL;
-  const uri: any = 'mongodb+srv://hashqubes-scratch-card:gGaeNSVBsIMm0uHi@cluster0.q2ktp.mongodb.net/scratch-card-db?retryWrites=true&w=majority&appName=Cluster0';
+  const uri: any = 'mongodb+srv://anuragmk10:pPvYEkVs2GUUeLyp@cluster0.amxz3.mongodb.net/scratch-card';
   if (!uri) {
     console.error("DATABASE_URL is not defined");
     process.exit(1);
