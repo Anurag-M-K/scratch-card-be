@@ -32,14 +32,21 @@ export const sendScratchCardLink = async (req: Request, res: Response) => {
     const scratchCardURL = `${process.env.SCRATCH_CARD_URL}/${token}`;
 
     // Send SMS using Twilio
-    const response: any = client.messages
-      .create({
-        body: `Click the link to reveal your offer: ${scratchCardURL}`,
-        from: "whatsapp:+14155238886",
-        to: "whatsapp:+919605257629",
-      })
-      .then((message: any) => console.log(message));
+    // const response: any = client.messages
+    //   .create({
+    //     body: `Click the link to reveal your offer: ${scratchCardURL}`,
+    //     from: "whatsapp:+14155238886",
+    //     to: "whatsapp:+919605257629",
+    //   })
+    //   .then((message: any) => console.log(message));
 
+    const response = await client.messages.create({
+      body: `Click the link to reveal your offer: ${scratchCardURL}`,
+      from: process.env.TWILIO_PHONE_NUMBER, // Replace with your Twilio phone number
+      to: `+91${mobileNumber}`, // Mobile number provided in the request
+    });
+
+    console.log("Resp[nose ",response)
     //it will work only if the message link sent to whatsap
     await User.create({
       phoneNumber: mobileNumber,
