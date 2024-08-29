@@ -3,6 +3,8 @@ import User from "../model/usersCountSchema";
 import { offer } from "../utils/constants";
 import jwt from "jsonwebtoken";
 import { getReward } from "../utils/utitlityFunctions";
+import bcrypt, { hash } from "bcryptjs";
+import Store from "../model/storeSchema";
 
 const twilio = require("twilio");
 const accountSid = "AC6414070589ee4e53b61487cbb5bac138";
@@ -88,12 +90,43 @@ export const verifyOffer = async (req: Request, res: Response) => {
       return res.status(401).json({message:"Expired"})
     }
 
-    console.log("offerid ", offerId);
     const selectedOffer = offer[offerId] || "Mobile Case";
 
     return res.status(200).json({ offer: selectedOffer });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
+
+
+export const login = async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body;
+
+    const user: any = await Store.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ message: "Invalid username", login: false });
+    }
+
+    // Verify password
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(400).json({ message: "Invalid password", login: false });
+    }
+
+    // If username and password are correct, generate a token
+    const token = user.generateAuthToken(user._id);
+    return res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      token: token,
+      login: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error", error });
   }
 };
