@@ -14,7 +14,7 @@ const client = twilio(accountSid, authToken);
 // const secreteKey = offer[offerId];
 
 const generateJWT = (offerId: any, reward: string) => {
-  return jwt.sign({ offerId }, reward, { expiresIn: "1h" });
+  return jwt.sign({ offerId }, "secrete_code", { expiresIn: "5m" });
 };
 
 export const sendScratchCardLink = async (req: Request, res: Response) => {
@@ -46,16 +46,20 @@ export const sendScratchCardLink = async (req: Request, res: Response) => {
       to: `+91${mobileNumber}`, // Mobile number provided in the request
     });
 
-    console.log("Resp[nose ",response)
+    console.log("Resp[nose ", response);
     //it will work only if the message link sent to whatsap
     await User.create({
       phoneNumber: mobileNumber,
     });
 
-    res.status(200).json({ message: "Message send successfully ",success:true });
+    res
+      .status(200)
+      .json({ message: "Message send successfully ", success: true });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error", error,success:false });
+    res
+      .status(500)
+      .json({ message: "Internal server error", error, success: false });
   }
 };
 
@@ -70,15 +74,21 @@ export const verifyOffer = async (req: Request, res: Response) => {
     //if token decode its id and return the offer accordint to the number
     let decoded: any;
     try {
-      decoded = jwt.decode(token) as { offerId: number };
-    } catch (error) {
+      decoded = jwt.verify(token, "secrete_code") as { offerId: number };
+    } catch (error: any) {
+      if (error.name === "TokenExpiredError") {
+        return res.status(401).json({ message: "Token has expired" });
+      }
       res.status(400).json({ message: "Invalid token" });
     }
 
     const { offerId } = decoded;
 
-    console.log("Decoded ", decoded);
+    if(!offerId){
+      return res.status(401).json({message:"Expired"})
+    }
 
+    console.log("offerid ", offerId);
     const selectedOffer = offer[offerId] || "Mobile Case";
 
     return res.status(200).json({ offer: selectedOffer });
