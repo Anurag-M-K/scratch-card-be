@@ -27,7 +27,6 @@ export const sendScratchCardLink = async (req: Request, res: Response) => {
 
     const reward = getReward(offerId);
 
-    console.log("offeriD", offerId);
 
     const token = generateJWT(offerId, reward);
 
@@ -48,7 +47,6 @@ export const sendScratchCardLink = async (req: Request, res: Response) => {
       to: `+91${mobileNumber}`, // Mobile number provided in the request
     });
 
-    console.log("Resp[nose ", response);
     //it will work only if the message link sent to whatsap
     await User.create({
       phoneNumber: mobileNumber,
@@ -90,7 +88,7 @@ export const verifyOffer = async (req: Request, res: Response) => {
       return res.status(401).json({message:"Expired"})
     }
 
-    const selectedOffer = offer[offerId] || "Mobile Case";
+    const selectedOffer = offer[offerId] || "Screen Guard";
 
     return res.status(200).json({ offer: selectedOffer });
   } catch (error) {

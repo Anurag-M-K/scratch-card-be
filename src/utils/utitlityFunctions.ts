@@ -4,6 +4,6 @@ export const getReward = (userCount: number) => {
   if (offer[userCount]) {
     return offer[userCount];
   } else {
-    return "Mobile Case";
+    return "Screen Guard";
   }
 };
